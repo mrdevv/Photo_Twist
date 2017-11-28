@@ -1,0 +1,29 @@
+version: '3.2'
+services:
+  postgres:
+    image: postgres:9.6.4
+    environment:
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+  django:
+    build: .
+    image: album_na_zdjecia
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+    - .:/code
+    - static:/_static
+    - media:/_media
+    ports:
+      - '8000:8000'
+    depends_on:
+      - postgres
+    env_file:
+      - .env.local
+volumes:
+  pg-data:
+    driver: local
+  static:
+    driver: local
+  media:
+    driver: local
