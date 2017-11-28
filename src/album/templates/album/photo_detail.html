@@ -1,0 +1,12 @@
+{% extends 'album/base.html' %}
+
+{% block title %}Photo Details{% endblock %}
+
+{% block body %}
+
+    <div class="photo_details col-sm-10 col-sm-offset-1">
+        <img src="/media/{{ photo.filter_photo }}" alt="">
+    </div>
+
+
+{% endblock %}

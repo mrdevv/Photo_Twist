@@ -36,6 +36,18 @@ class AlbumDelete(DeleteView):
     success_url = reverse_lazy('album:index')
 
 
+class PhotoView(generic.DetailView):
+    model = Photo
+    template_name = 'album/photo_detail.html'
+
+    # def get_queryset(self, **kwargs):
+    #     return Photo.objects.filter(id=kwargs.get('photo_id'))
+
+    # def get(self, request, *args, **kwargs):
+    #     photo = Photo.objects.filter(id=kwargs.get('photo_id'))
+    #     return render(request, self.template_name, {'photo': photo})
+
+
 class PhotoDelete(View):
     model = Photo
     success_url = reverse_lazy('album:index')
