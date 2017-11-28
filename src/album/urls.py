@@ -22,4 +22,9 @@ urlpatterns = [
 
     # /album/<album_id>/delete/<photo_id>
     url(r'^(?P<pk>[0-9]+)/(?P<photo_id>[0-9]+)/delete/$', views.PhotoDelete.as_view(), name='photo-delete'),
+
+    # /album/<album_id>/photo/<photo_id>
+    # url(r'^(?P<album_id>[0-9]+)/photo/(?P<photo_id>[0-9]+)/$', views.PhotoView.as_view(), name='photo-detail'),
+    url(r'^photo/(?P<pk>[0-9]+)/$', views.PhotoView.as_view(), name='photo-detail'),
+
 ]

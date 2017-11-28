@@ -3,29 +3,41 @@
 {% block title %}to jest strona szczegol{% endblock %}
 
 {% block body %}
-    <div class="main_photo col-sm-10 col-sm-offset-1">
+    <div class="main_photo">
         <img src="{{ album.main_photo.url }}" alt="">
+        <form action="{% url 'album:photo-add' %}" method="post">
+        {% csrf_token %}
+            <input type="hidden" name="album_id" value="{{ album.id }}">
+            <button type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj zdjecie</button>
+        </form>
     </div>
 
     <div class="photo_list col-sm-10 col-sm-offset-1">
         {% for photo in album.photo_set.all %}
         <div class="single_image">
+
             <img src="{{ photo.photo.url }}" alt="">
+
             <form action="{% url 'album:photo-delete' photo.album_id photo.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="photo_id" value="{{ photo.id }}">
-                <button type="submit" class="btn btn-default btn-sm">
+                <button type="submit" class="btn btn-default btn-sm col-sm-2 col-sm-offset-1">
                     <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </form>
+            <form action="{% url 'album:photo-detail' photo.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="photo_id" value="{{ photo.id }}">
+                <button type="submit" class="btn btn-default btn-sm col-sm-2 col-sm-offset-1">
+                    <span class="glyphicon glyphicon-pencil"></span>
                 </button>
             </form>
         </div>
         {% endfor %}
     </div>
 
-    <form action="{% url 'album:photo-add' %}" method="get">
-    {% csrf_token %}
-        <input type="hidden" name="album_id" value="{{ album.id }}">
-        <button type="submit" class="btn btn-default">Dodaj zdjecie</button>
-    </form>
+
     
 {% endblock %}
