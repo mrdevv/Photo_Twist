@@ -27,4 +27,15 @@ class Photo(models.Model):
         return self.photo
 
     def get_absolute_url(self):
-        return reverse('album:detail', kwargs={'pk': self.album_id})
+        return reverse('album:detail', kwargs={'pk': self.album})
+
+
+class FilteredPhoto(models.Model):
+    primary_photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    filtered_photo_url = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.filtered_photo_url
+
+    def get_absolute_url(self):
+        return reverse('album:photo-detail', kwargs={'pk': self.primary_photo})
