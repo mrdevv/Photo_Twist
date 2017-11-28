@@ -5,8 +5,14 @@
 {% block body %}
 
     <div class="photo_details col-sm-10 col-sm-offset-1">
-        <img src="/media/{{ photo.filter_photo }}" alt="">
+        <img src="{{ photo.photo.url }}" alt="">
     </div>
+
+    {% for photo in photo.filteredphoto_set.all %}
+        <div class="photo_details col-sm-10 col-sm-offset-1">
+            <img src="{{ photo.filtered_photo_url }}" alt="">
+        </div>
+    {% endfor %}
 
 
 {% endblock %}

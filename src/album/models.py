@@ -21,7 +21,6 @@ class Album(models.Model):
 class Photo(models.Model):
     album = models.ForeignKey(Album, on_delete=models.CASCADE)
     photo = models.FileField()
-    filter_photo = models.CharField(max_length=100, null=True, blank=True)
     upload_date = models.DateField()
 
     def __str__(self):
@@ -29,3 +28,14 @@ class Photo(models.Model):
 
     def get_absolute_url(self):
         return reverse('album:detail', kwargs={'pk': self.album})
+
+
+class FilteredPhoto(models.Model):
+    primary_photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    filtered_photo_url = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.filtered_photo_url
+
+    def get_absolute_url(self):
+        return reverse('album:photo-detail', kwargs={'pk': self.primary_photo})

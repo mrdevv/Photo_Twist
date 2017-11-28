@@ -52,7 +52,7 @@ body {
 }
 
 .single_image img{
-    max-width: 300px;
+    max-height: 200px;
     float: left;
     margin: 5px;
 
