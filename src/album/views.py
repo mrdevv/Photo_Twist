@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from .models import Album, Photo, FilteredPhoto
 from .forms import PhotoForm
-from .skimageController import SkimageController
+from .skimageController import SkimageController, FILTERS
 
 
 
@@ -65,10 +65,13 @@ class PhotoFormView(View):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             photo_form = form.save()
-            filter_image = SkimageController.uploadImage(filename=photo_form.photo,
-                                                         filterFn='RGB2GRAY')
-            photo_form.filter_photo = settings.MEDIA_URL + filter_image
-            filt_form = FilteredPhoto(primary_photo=form.instance, filtered_photo_url=settings.MEDIA_URL + filter_image)
-            filt_form.save()
+
+            for key, value in FILTERS.items():
+                filter_image = SkimageController.uploadImage(filename=photo_form.photo,
+                                                             filterFn=key)
+                photo_form.filter_photo = settings.MEDIA_URL + filter_image
+                filt_form = FilteredPhoto(primary_photo=form.instance, filtered_photo_url=settings.MEDIA_URL + filter_image)
+                filt_form.save()
+
 
         return redirect('album:detail', pk=request.GET['album_id'])

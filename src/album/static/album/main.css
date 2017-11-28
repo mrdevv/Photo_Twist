@@ -1,5 +1,5 @@
 body {
-    background: white url("media/background.jpg");
+    background: white url("media/background.png");
 }
 
 
@@ -58,6 +58,10 @@ body {
 
 }
 
+.photo_details {
+    margin: 30px;
+}
+
 .photo_details img{
-    max-width: 80vw;
+    max-width: 30vw;
 }
