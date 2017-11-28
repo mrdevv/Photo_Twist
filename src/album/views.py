@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import os
 
 from django.views.generic import View
 from django.views.generic.edit import CreateView, DeleteView
@@ -10,7 +9,7 @@ from django.views import generic
 from django.core.urlresolvers import reverse_lazy
 from .models import Album, Photo
 from .forms import PhotoForm
-from .skimageController import SkimageCommand
+from .skimageController import SkimageController
 
 
 
@@ -59,8 +58,11 @@ class PhotoFormView(View):
     def post(self, request):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-            f = form.save()
-            SkimageCommand.uploadImage(f.photo)
+            photo_form = form.save()
+            filter_image = SkimageController.uploadImage(filename=photo_form.photo,
+                                                         filterFn='RGB2GRAY')
+            photo_form.filter_photo = filter_image
+            photo_form.save()
 
         return redirect('album:detail', pk=request.GET['album_id'])
 

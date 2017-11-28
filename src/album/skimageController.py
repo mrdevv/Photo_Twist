@@ -12,18 +12,49 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 
-class SkimageCommand(object):
-    @staticmethod
-    def uploadImage(filename=None, *args, **kwargs):
+class FileCommand(object):
+    @classmethod
+    def getTempPath(cls, filename):
+        return os.path.join(settings.MEDIA_ROOT, filename)
 
-        #przygotowanie oryginalnego pliku w katalogu tmp
-        tmp_file = os.path.join(settings.MEDIA_ROOT, filename.name)
-
-        moon = io.imread(tmp_file)
-        img_rgb = rgb2gray(moon)
-
-        #zapis obrazu jako tablica, numpy
-        scipy.misc.imsave(settings.MEDIA_ROOT + '/' + filename.name, img_rgb)
+    @classmethod
+    def imageToNumArray(cls, filepath):
+        return io.imread(filepath)
 
 
-        return 0
+class SkimageRgb2GrayCommands(FileCommand):
+    @classmethod
+    def execute(cls, **kwargs):
+
+        file = kwargs.get('filename')
+        tmp_file = cls.getTempPath(file.name)
+
+        img = cls.imageToNumArray(tmp_file)
+
+        img_gray = rgb2gray(img)
+
+        img_gray_path = 'rgb2gray_' + file.name
+
+        return img_gray_path, img_gray
+
+
+FILTERS = {
+        'RGB2GRAY': SkimageRgb2GrayCommands,
+    }
+
+class SkimageController(object):
+    @classmethod
+    def uploadImage(cls, **kwargs):
+
+        params = {
+            'filename': kwargs.get('filename'),
+        }
+
+        filter = kwargs.get('filterFn')
+        image_path, image = FILTERS[filter].execute(**params)
+        try:
+            scipy.misc.imsave(settings.MEDIA_ROOT + '/' + image_path, image)
+            return image_path
+
+        except:
+            return 0
