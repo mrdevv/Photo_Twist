@@ -1,4 +1,19 @@
-#PHOTO TWIST
+<h1>
+**** PHOTO TWIST ****
+</h1>
+
+
+This app will help You to change Your photos from this...
+
+![Alt text](misc/back.png)
+
+
+
+##INTO THIS....
+
+![Alt text](misc/background.png)  
+
+
 
 ## Running up
 
@@ -29,7 +44,7 @@ if success You should see this:
 #### 5. Open Your browser and type `localhost:8000/album`
 
         
-![Alt text](background.png)        
+
         
         
 
