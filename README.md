@@ -5,7 +5,7 @@
 
 This app will help You to change Your photos from this...
 
-![Alt text](misc/back.png)
+![Alt text](misc/back.jpg)
 
 
 
