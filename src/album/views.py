@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+import os
 from django.views.generic import View
 from django.views.generic.edit import CreateView, DeleteView
 from django.shortcuts import render, redirect
@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from .models import Album, Photo, FilteredPhoto
 from .forms import PhotoForm
-from .skimageController import SkimageController, FILTERS
+from .skimageController import SkimageController, FILTERS, FileController
 
 
 
@@ -31,10 +31,30 @@ class AlbumCreate(CreateView):
     model = Album
     fields = ['title', 'date', 'content', 'main_photo']
 
+    def post(self, *args, **kwargs):
+        try:
+            FileController.createAlbum(**{'albumTitle': self.request.POST['title']})
+            return super(AlbumCreate, self).post(self, *args, **kwargs)
+        except:
+            pass
+
 
 class AlbumDelete(DeleteView):
     model = Album
     success_url = reverse_lazy('album:index')
+
+    def post(self, request, *args, **kwargs):
+        params = {
+            'albumTitle': request.POST['album_title'],
+            'main_photo': request.POST['main_photo'],
+        }
+
+        try:
+            FileController.deleteAlbum(**params)
+            return self.delete(request, *args, **kwargs)
+
+        except:
+            return self.delete(request, *args, **kwargs)
 
 
 class PhotoView(generic.DetailView):
@@ -53,7 +73,7 @@ class PhotoDelete(View):
         return redirect('album:detail', pk=kwargs.get('pk'))
 
 
-class PhotoFormView(View):
+class PhotoCreate(View):
     form_class = PhotoForm
     template_name = 'album/photo_form.html'
 
@@ -68,6 +88,7 @@ class PhotoFormView(View):
 
             for key, value in FILTERS.items():
                 filter_image = SkimageController.uploadImage(filename=photo_form.photo,
+                                                             albumpath=photo_form.album.title,
                                                              filterFn=key)
                 photo_form.filter_photo = settings.MEDIA_URL + filter_image
                 filt_form = FilteredPhoto(primary_photo=form.instance, filtered_photo_url=settings.MEDIA_URL + filter_image)

@@ -10,7 +10,7 @@
             <div class="col-sm-12 col-md-7">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form action="" class="form-horizontal" method="post" enctype="multipart/form-data">
+                        <form action="{% url 'album:album-add' %}" class="form-horizontal" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             {% include 'album/form_template.html' %}
                             <div class="form-group">
