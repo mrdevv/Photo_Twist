@@ -1,7 +1,6 @@
 
 from .models import Album, Photo, FilteredPhoto
 from django import forms
-from django.db import models
 
 
 class AlbumForm(forms.ModelForm):
@@ -20,3 +19,5 @@ class FilteredPhotoForm(forms.ModelForm):
     class Meta:
         model = FilteredPhoto
         fields = '__all__'
+
+
