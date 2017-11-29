@@ -6,15 +6,15 @@ from django.views.generic.edit import CreateView, DeleteView
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.conf import settings
-
+from Album_na_Zdjecia.authController import SecuredUser
 from django.core.urlresolvers import reverse_lazy
 from .models import Album, Photo, FilteredPhoto
-from .forms import PhotoForm
-from .skimageController import SkimageController, FILTERS
+from .forms import PhotoForm, AlbumForm
+from .skimageCommands import SkimageController, FILTERS
 
 
-
-class IndexView(generic.ListView):
+class IndexView(SecuredUser, generic.ListView):
+    form_class = AlbumForm
     template_name = 'album/index.html'
     context_object_name = 'album_list'
 
@@ -22,27 +22,27 @@ class IndexView(generic.ListView):
         return Album.objects.all()
 
 
-class DetailView(generic.DetailView):
+class DetailView(SecuredUser, generic.DetailView):
     model = Album
     template_name = 'album/detail.html'
 
 
-class AlbumCreate(CreateView):
+class AlbumCreate(SecuredUser, CreateView):
     model = Album
     fields = ['title', 'date', 'content', 'main_photo']
 
 
-class AlbumDelete(DeleteView):
+class AlbumDelete(SecuredUser, DeleteView):
     model = Album
     success_url = reverse_lazy('album:index')
 
 
-class PhotoView(generic.DetailView):
+class PhotoView(SecuredUser, generic.DetailView):
     model = Photo
     template_name = 'album/photo_detail.html'
 
 
-class PhotoDelete(View):
+class PhotoDelete(SecuredUser, View):
     model = Photo
     success_url = reverse_lazy('album:index')
 
@@ -53,7 +53,7 @@ class PhotoDelete(View):
         return redirect('album:detail', pk=kwargs.get('pk'))
 
 
-class PhotoFormView(View):
+class PhotoFormView(SecuredUser, View):
     form_class = PhotoForm
     template_name = 'album/photo_form.html'
 
@@ -73,5 +73,18 @@ class PhotoFormView(View):
                 filt_form = FilteredPhoto(primary_photo=form.instance, filtered_photo_url=settings.MEDIA_URL + filter_image)
                 filt_form.save()
 
-
         return redirect('album:detail', pk=request.GET['album_id'])
+
+
+
+
+
+
+
+
+
+
+
+
+
+

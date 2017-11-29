@@ -1,10 +1,12 @@
 {% extends 'album/base.html' %}
+
+
 {% block title %}dodaj nowy album{% endblock %}
 {% block albums_active %}active{% endblock %}
 
 
 {% block body %}
-
+{% include 'album/navbar.html' %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-7">
