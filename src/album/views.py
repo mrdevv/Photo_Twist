@@ -18,6 +18,9 @@ class IndexView(SecuredUser, generic.ListView):
     template_name = 'album/index.html'
     context_object_name = 'album_list'
 
+    def get(self, request, *args, **kwargs):
+        return super(IndexView, self).checkSession(self, request, *args, **kwargs)
+
     def get_queryset(self):
         return Album.objects.filter(user_id=self.request.user.id)
 
@@ -53,11 +56,6 @@ class AlbumDelete(SecuredUser, DeleteView):
     model = Album
     success_url = reverse_lazy('album:index')
 
-    def post(self, request, *args, **kwargs):
-        params = {
-            'albumTitle': request.POST['album_title'],
-            'main_photo': request.POST['main_photo'],
-        }
 
 class PhotoView(SecuredUser, generic.DetailView):
     model = Photo
@@ -82,7 +80,7 @@ class PhotoDelete(SecuredUser, View):
         return redirect('album:detail', pk=kwargs.get('pk'))
 
 
-class PhotoFormView(SecuredUser, CreateView):
+class PhotoCreate(SecuredUser, CreateView):
     form_class = PhotoForm
     template_name = 'album/photo_form.html'
 

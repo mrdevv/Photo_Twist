@@ -104,14 +104,11 @@ class SkimageController(object):
         filter = kwargs.get('filterFn')
         album_path = kwargs.get('albumpath')
         image_path, image = FILTERS[filter].execute(**params)
-        dir = os.path.join(settings.MEDIA_ROOT, album_path)
-
-        path = os.path.join(dir, image_path)
+        dir = os.path.join(settings.MEDIA_ROOT, image_path)
 
         try:
-            scipy.misc.imsave(path, image)
+            scipy.misc.imsave(dir, image)
             return image_path
-
         except:
             return 0
 
