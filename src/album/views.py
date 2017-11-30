@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.views.generic import View
+from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, DeleteView
 from django.shortcuts import render, redirect
 from django.views import generic
@@ -19,17 +19,34 @@ class IndexView(SecuredUser, generic.ListView):
     context_object_name = 'album_list'
 
     def get_queryset(self):
-        return Album.objects.all()
+        return Album.objects.filter(user_id=self.request.user.id)
 
 
 class DetailView(SecuredUser, generic.DetailView):
     model = Album
     template_name = 'album/detail.html'
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user_id == self.request.user.id:
+            context = self.get_context_data(object=self.object)
+            return self.render_to_response(context)
+        else:
+            return redirect('album:index')
+
 
 class AlbumCreate(SecuredUser, CreateView):
-    model = Album
-    fields = ['title', 'date', 'content', 'main_photo']
+    form_class = AlbumForm
+    template_name = 'album/album_form.html'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        form.instance.user = User.objects.get(id=request.user.id)
+
+        if form.is_valid():
+            form.save()
+
+        return redirect('album:index')
 
 
 class AlbumDelete(SecuredUser, DeleteView):
@@ -40,6 +57,13 @@ class AlbumDelete(SecuredUser, DeleteView):
 class PhotoView(SecuredUser, generic.DetailView):
     model = Photo
     template_name = 'album/photo_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        super(PhotoView, self).checkSession(self, request, *args, **kwargs)
+        if Album.objects.filter(pk=self.object.album_id, user_id=self.request.user.id):
+            return self.render_to_response(self.get_context_data(object=self.object))
+        else:
+            return redirect('album:index')
 
 
 class PhotoDelete(SecuredUser, View):
@@ -53,15 +77,11 @@ class PhotoDelete(SecuredUser, View):
         return redirect('album:detail', pk=kwargs.get('pk'))
 
 
-class PhotoFormView(SecuredUser, View):
+class PhotoFormView(SecuredUser, CreateView):
     form_class = PhotoForm
     template_name = 'album/photo_form.html'
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(request.GET)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             photo_form = form.save()
