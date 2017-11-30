@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.urlresolvers import reverse
 
 
 class Album(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=100)
     date = models.DateField()
     content = models.TextField(max_length=1000, blank=True, null=True)

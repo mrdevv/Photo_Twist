@@ -3,10 +3,16 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
+from . import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^album/', include('album.urls')),
+
+    url(r'register/', views.UserFormView.as_view(), name='register'),
+    url(r'login/', views.LoginForm.as_view(), name='login'),
+    url(r'logout/', views.LogoutView.as_view(), name='logout'),
+
 ]
 
 if settings.DEBUG:

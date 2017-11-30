@@ -3,6 +3,7 @@
 {% block title %}Album Details{% endblock %}
 
 {% block body %}
+    {% include 'album/navbar.html' %}
     <div class="main_photo">
         <img src="{{ album.main_photo.url }}" alt="">
         <form action="{% url 'album:photo-add' %}" method="get">
