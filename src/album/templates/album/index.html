@@ -4,7 +4,7 @@
     {% include 'album/navbar.html' %}
     <div class="container-fluid section-index">
     {% if album_list %}
-        <h1>Lista Twoich albumów</h1>
+        <h1>Your Albums</h1>
         <ul class="col-sm-10 col-sm-offset-1">
 
             {% for item in album_list %}
@@ -17,7 +17,8 @@
                     </div>
                     <form action="{% url 'album:album-delete' item.id %}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="album_id" value="{{ item.id }}">
+                        <input type="hidden" name="album_title" value="{{ item.title }}">
+                        <input type="hidden" name="main_photo" value="{{ item.main_photo }}">
                         <button type="submit" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
@@ -30,7 +31,7 @@
 
     {% else %}
 
-        <h1>Nie masz żadnych Albumów </h1>
+        <h1>Add New Album</h1>
 
     {% endif %}
     </div>

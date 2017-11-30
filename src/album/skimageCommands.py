@@ -1,4 +1,9 @@
 import skimage
+import shutil
+import numpy
+import scipy.misc
+import os
+
 from skimage import io, data, img_as_float, color
 from skimage.color import rgb2gray
 from skimage.filters import roberts, sobel, scharr, prewitt
@@ -6,9 +11,7 @@ from skimage.morphology import watershed
 from skimage.measure import label
 from skimage.segmentation import slic, join_segmentations
 from numpy import transpose
-import numpy
-import scipy.misc
-import os
+
 from django.conf import settings
 
 
@@ -20,6 +23,12 @@ class FileCommand(object):
     @classmethod
     def imageToNumArray(cls, filepath):
         return io.imread(filepath)
+
+    @classmethod
+    def deleteFullAlbum(cls, albumpath, filepath):
+        os.remove(filepath)
+        shutil.rmtree(albumpath)
+        return
 
 
 class SkimageRgb2GrayCommands(FileCommand):
@@ -77,12 +86,12 @@ class SkimageColorCommand(FileCommand):
         return img_path, edge_res
 
 
-
 FILTERS = {
         'RGB2GRAY': SkimageRgb2GrayCommands,
         'EDGE': SkimageEdgeCommand,
         'COLOR': SkimageColorCommand,
     }
+
 
 class SkimageController(object):
     @classmethod
@@ -93,10 +102,38 @@ class SkimageController(object):
         }
 
         filter = kwargs.get('filterFn')
+        album_path = kwargs.get('albumpath')
         image_path, image = FILTERS[filter].execute(**params)
+        dir = os.path.join(settings.MEDIA_ROOT, album_path)
+
+        path = os.path.join(dir, image_path)
+
         try:
-            scipy.misc.imsave(settings.MEDIA_ROOT + '/' + image_path, image)
+            scipy.misc.imsave(path, image)
             return image_path
 
         except:
             return 0
+
+
+class FileController(FileCommand):
+    @classmethod
+    def deleteAlbum(cls, **kwargs):
+
+        try:
+            albumpath = os.path.join(settings.MEDIA_ROOT, kwargs.get('albumTitle'))
+            filepath = os.path.join(settings.MEDIA_ROOT, kwargs.get('main_photo'))
+            FileCommand.deleteFullAlbum(albumpath, filepath)
+        except:
+            return 1
+
+    @classmethod
+    def createAlbum(cls, **kwargs):
+        albumpath = kwargs.get('albumTitle')
+        dir = os.path.join(settings.MEDIA_ROOT, albumpath)
+        try:
+            os.stat(dir)
+        except:
+            os.makedirs(dir)
+
+        return 1

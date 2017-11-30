@@ -53,6 +53,11 @@ class AlbumDelete(SecuredUser, DeleteView):
     model = Album
     success_url = reverse_lazy('album:index')
 
+    def post(self, request, *args, **kwargs):
+        params = {
+            'albumTitle': request.POST['album_title'],
+            'main_photo': request.POST['main_photo'],
+        }
 
 class PhotoView(SecuredUser, generic.DetailView):
     model = Photo
@@ -88,6 +93,7 @@ class PhotoFormView(SecuredUser, CreateView):
 
             for key, value in FILTERS.items():
                 filter_image = SkimageController.uploadImage(filename=photo_form.photo,
+                                                             albumpath=photo_form.album.title,
                                                              filterFn=key)
                 photo_form.filter_photo = settings.MEDIA_URL + filter_image
                 filt_form = FilteredPhoto(primary_photo=form.instance, filtered_photo_url=settings.MEDIA_URL + filter_image)

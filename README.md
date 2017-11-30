@@ -3,7 +3,10 @@
 </h1>
 
 
-This app will help You to change Your photos from this...
+This app will help You to manage Your photos, by making Albums, upload photos and describe them. 
+
+
+But also will help You to change Your photos from this...
 
 ![Alt text](misc/back.jpg)
 
@@ -19,7 +22,7 @@ This app will help You to change Your photos from this...
 
 #### Requirements
 
-If You want to download and run this up, You need to install `Docker` and `Docker-compose` first
+If You want to download and run this app, You need to install `Docker` and `Docker-compose` first
 
 
 #### Docker image build

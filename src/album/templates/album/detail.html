@@ -1,6 +1,6 @@
 {% extends 'album/base.html' %}
 
-{% block title %}to jest strona szczegol{% endblock %}
+{% block title %}Album Details{% endblock %}
 
 {% block body %}
     {% include 'album/navbar.html' %}
@@ -11,7 +11,7 @@
             <input type="hidden" name="album_id" value="{{ album.id }}">
             <button type="submit" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span>
-                Dodaj zdjecie</button>
+                Add Photo</button>
         </form>
     </div>
 
