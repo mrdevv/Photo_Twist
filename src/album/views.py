@@ -3,6 +3,7 @@
 from django.views.generic import View
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, DeleteView
+
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.conf import settings
@@ -11,6 +12,11 @@ from django.core.urlresolvers import reverse_lazy
 from .models import Album, Photo, FilteredPhoto
 from .forms import PhotoForm, AlbumForm
 from .skimageCommands import SkimageController, FILTERS
+from Album_na_Zdjecia.forms import UserFormLogin
+
+
+
+
 
 
 class IndexView(SecuredUser, generic.ListView):

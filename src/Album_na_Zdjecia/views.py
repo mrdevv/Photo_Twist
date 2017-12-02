@@ -2,18 +2,18 @@
 from __future__ import unicode_literals
 
 from django.views.generic import View
-from django.views.generic.edit import CreateView, DeleteView
 from django.shortcuts import render, redirect
-from django.views import generic
-from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from Album_na_Zdjecia.authController import SecuredUser
-from django.core.urlresolvers import reverse_lazy
 from .forms import UserFormRegister, UserFormLogin
+from allauth.socialaccount.views import SignupView
+from allauth.socialaccount.signals import pre_social_login
 
 
+from django.shortcuts import render
+
+
+class MySignupView(SignupView):
+    template_name = 'login.html'
 
 class UserFormView(View):
     form_class = UserFormRegister

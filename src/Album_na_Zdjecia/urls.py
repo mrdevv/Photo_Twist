@@ -10,8 +10,10 @@ urlpatterns = [
     url(r'^album/', include('album.urls')),
 
     url(r'register/', views.UserFormView.as_view(), name='register'),
-    url(r'login/', views.LoginForm.as_view(), name='login'),
-    url(r'logout/', views.LogoutView.as_view(), name='logout'),
+    url(r'account_login/', views.LoginForm.as_view(), name='login'),
+    url(r'account_logout/', views.LogoutView.as_view(), name='logout'),
+    url(r'accounts/social/signup/', views.MySignupView.as_view(), name='singup'),
+    url(r'^accounts/', include('allauth.urls')),
 
 ]
 
