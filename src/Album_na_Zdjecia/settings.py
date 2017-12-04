@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*', 'localhost']
 
 INSTALLED_APPS = [
     'suit',
+    'stdimage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'Album_na_Zdjecia.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'album/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,9 +145,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'album', 'static'),
 )
 
-# TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
+# TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'album', 'templates'),)
 
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media', 'media_root')
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 MEDIA_URL = '/media/'
 
 
@@ -157,5 +158,6 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 LOGIN_REDIRECT_URL = '/album'
+LOGIN_URL = '/account_login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -11,6 +11,8 @@ from skimage.morphology import watershed
 from skimage.measure import label
 from skimage.segmentation import slic, join_segmentations
 from numpy import transpose
+from .models import FilteredPhoto, Photo, Album
+from stdimage.utils import pre_delete_delete_callback
 
 from django.conf import settings
 
@@ -24,11 +26,6 @@ class FileCommand(object):
     def imageToNumArray(cls, filepath):
         return io.imread(filepath)
 
-    @classmethod
-    def deleteFullAlbum(cls, albumpath, filepath):
-        os.remove(filepath)
-        shutil.rmtree(albumpath)
-        return
 
 
 class SkimageRgb2GrayCommands(FileCommand):
@@ -115,22 +112,23 @@ class SkimageController(object):
 
 class FileController(FileCommand):
     @classmethod
-    def deleteAlbum(cls, **kwargs):
-
-        try:
-            albumpath = os.path.join(settings.MEDIA_ROOT, kwargs.get('albumTitle'))
-            filepath = os.path.join(settings.MEDIA_ROOT, kwargs.get('main_photo'))
-            FileCommand.deleteFullAlbum(albumpath, filepath)
-        except:
-            return 1
+    def deleteAlbum(cls, album):
+        photos = Photo.objects.filter(album_id=album.id)
+        if photos:
+            cls.deletePhoto(photos)
+        pre_delete_delete_callback(sender=Album, instance=album)
+        album.delete()
+        return True
 
     @classmethod
-    def createAlbum(cls, **kwargs):
-        albumpath = kwargs.get('albumTitle')
-        dir = os.path.join(settings.MEDIA_ROOT, albumpath)
-        try:
-            os.stat(dir)
-        except:
-            os.makedirs(dir)
+    def deletePhoto(cls, photos):
+        for foto in photos:
+            filt = FilteredPhoto.objects.filter(primary_photo_id=foto.id)
+            pre_delete_delete_callback(sender=Photo, instance=foto)
+            for i in filt:
+                pre_delete_delete_callback(sender=FilteredPhoto, instance=i)
+        return True
 
-        return 1
+    @classmethod
+    def deleteFilteredPhotos(cls, **kwargs):
+        pass

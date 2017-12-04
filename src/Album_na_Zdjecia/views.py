@@ -6,14 +6,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from .forms import UserFormRegister, UserFormLogin
 from allauth.socialaccount.views import SignupView
-from allauth.socialaccount.signals import pre_social_login
-
-
-from django.shortcuts import render
 
 
 class MySignupView(SignupView):
     template_name = 'login.html'
+
 
 class UserFormView(View):
     form_class = UserFormRegister
@@ -44,28 +41,6 @@ class UserFormView(View):
         return render(request, self.template_name, {'form': form})
 
 
-# class LoginForm(View):
-#     form_class = UserFormLogin
-#     template_name = 'login.html'
-#
-#     def get(self, request):
-#         form = self.form_class()
-#         return render(request, self.template_name, {'form': form})
-#
-#     def post(self, request, *args, **kwargs):
-#         form = self.form_class(request.POST)
-#
-#         username = form.data['username']
-#         password = form.data['password']
-#         user = authenticate(username=username, password=password)
-#
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 return redirect('album:index')
-#         else:
-#             return render(request, self.template_name, {'form': form})
-
 class LoginForm(View):
     form_class = UserFormLogin
     template_name = 'login.html'
@@ -85,7 +60,6 @@ class LoginForm(View):
                 return render(request, self.template_name, {'form': form})
         else:
             return render(request, self.template_name, {'form': form})
-
 
 
 class LogoutView(View):

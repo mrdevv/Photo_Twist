@@ -10,7 +10,7 @@
 
     {% for photo in photo.filteredphoto_set.all %}
         <div class="photo_details col-sm-4">
-            <img src="{{ photo.filtered_photo_url }}" alt="">
+            <img src="{{ photo.filtered_photo_url.url }}" alt="">
         </div>
     {% endfor %}
 
