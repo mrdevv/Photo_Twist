@@ -10,7 +10,7 @@ from stdimage.models import StdImageField
 class Album(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateField(blank=True, null=True, default='')
     content = models.TextField(max_length=1000, blank=True, null=True)
     main_photo = StdImageField()
 
